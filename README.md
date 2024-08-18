@@ -2,8 +2,8 @@
 
 An Android app built with Jetpack Compose and Kotlin, using the awesome Repository design pattern 🤘. 
 
-We are taking current location with FUSED LOCATION PROVIDER, from that we grab weather data from WEB API via Retrofit2 than storing it on ROOM DB, 
-and if location request failed we retrieve from DB.
+We are taking current location with `Fused Location Provider`, from that we grab weather data from WEB API via Retrofit2 than storing it on `Room DB`, 
+and if location request failed we retrieve from Database.
 
 ## Cool Tech Stack!
 
@@ -42,7 +42,7 @@ and if location request failed we retrieve from DB.
 
 Check out this cool GIF of the app in action! 🎬
 
-![image](https://github.com/user-attachments/assets/45191362-a6d3-4e82-865c-cca4a4193280)
+https://github.com/user-attachments/assets/61c2ae5a-f8cc-45a4-82c1-b3eecd16ccac
 
 ## TODO
 
