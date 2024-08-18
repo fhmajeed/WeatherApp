@@ -1,20 +1,22 @@
 package com.plcoding.weatherapp.data.repositoryImp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.os.Looper
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.plcoding.weatherapp.domain.repository.LocationRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-@RequiresApi(Build.VERSION_CODES.M)
 class LocationRepositoryImp @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val application: Application
@@ -37,19 +39,18 @@ class LocationRepositoryImp @Inject constructor(
                 LocationManager.NETWORK_PROVIDER
             )
 
-        if(!isGPSEnable) return null
+        if (!isGPSEnable) return null
 
         return suspendCancellableCoroutine { cancellableContinuation ->
             fusedLocationProviderClient.lastLocation.apply {
-                if(isComplete){
-                    if(isSuccessful){
+                if (isComplete) {
+                    if (isSuccessful) {
                         cancellableContinuation.resume(result)
-                    }else{
+                    } else {
                         cancellableContinuation.resume(null)
                     }
                     return@suspendCancellableCoroutine
                 }
-
                 addOnCompleteListener {
                     cancellableContinuation.resume(result)
                 }
@@ -62,4 +63,36 @@ class LocationRepositoryImp @Inject constructor(
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
+    override suspend fun requestLocationUpdate(): Location? {
+
+        val cancellableContinuation =
+            suspendCancellableCoroutine { cancellableContinuation ->
+
+                val locationRequest = LocationRequest.create().apply {
+                    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                    // ... other settings
+                }
+
+                val locationCallback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        cancellableContinuation.resume(locationResult.lastLocation)
+                    }
+                }
+
+                fusedLocationProviderClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
+
+                cancellableContinuation.invokeOnCancellation {
+                    fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+                }
+            }
+
+        return cancellableContinuation
+    }
+
 }

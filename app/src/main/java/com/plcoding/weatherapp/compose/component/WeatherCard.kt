@@ -1,4 +1,4 @@
-package com.plcoding.weatherapp.compose
+package com.plcoding.weatherapp.compose.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plcoding.weatherapp.R
 import com.plcoding.weatherapp.compose.theme.DarkBlue
 import com.plcoding.weatherapp.domain.weather.WeatherData
 import com.plcoding.weatherapp.domain.weather.WeatherType
@@ -104,17 +105,17 @@ fun WeatherCard(
 
                     ) {
                         WeatherDataDisplay(
-                            vector = painterResource(id = com.plcoding.weatherapp.R.drawable.ic_drop),
+                            vector = painterResource(id = R.drawable.ic_drop),
                             unit = "HDP",
                             value = data.humidity.toString()
                         )
                         WeatherDataDisplay(
-                            vector = painterResource(id = com.plcoding.weatherapp.R.drawable.ic_pressure),
+                            vector = painterResource(id = R.drawable.ic_pressure),
                             unit = "ksa",
                             value = data.pressure.toString()
                         )
                         WeatherDataDisplay(
-                            vector = painterResource(id = com.plcoding.weatherapp.R.drawable.ic_wind),
+                            vector = painterResource(id = R.drawable.ic_wind),
                             unit = "m/hr",
                             value = data.windSpeed.toString()
                         )

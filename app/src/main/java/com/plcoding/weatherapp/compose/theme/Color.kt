@@ -1,4 +1,4 @@
-package com.plcoding.weatherapp.ui.theme
+package com.plcoding.weatherapp.compose.theme
 
 import androidx.compose.ui.graphics.Color
 

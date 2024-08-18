@@ -1,6 +1,7 @@
-package com.plcoding.weatherapp.compose
+package com.plcoding.weatherapp.compose.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,7 +19,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun WeatherForecast(
     weatherDataPerDate: Map<Int, List<WeatherData>>?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onWeatherDataPerDateClick: (WeatherData) -> Unit
 ) {
     weatherDataPerDate?.get(0)?.let { list ->
         Column(
@@ -28,17 +30,20 @@ fun WeatherForecast(
         ) {
             Text(
                 text = "Today",
-                modifier = Modifier.align(Start) ,
+                modifier = Modifier.align(Start),
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(10.dp))
             LazyRow(content = {
                 items(list) { weatherData ->
                     HourlyWeatherData(
-                        weatherData,
                         modifier = modifier
                             .wrapContentHeight()
                             .padding(10.dp)
+                            .clickable(
+                                onClick = { onWeatherDataPerDateClick(weatherData) }
+                            ),
+                        weatherData = weatherData
                     )
                 }
             })
