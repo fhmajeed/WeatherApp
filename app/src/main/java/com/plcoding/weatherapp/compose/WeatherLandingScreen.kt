@@ -66,12 +66,12 @@ fun WeatherLandingScreen(
         }
     }
 
-    val weatherState = viewModel.weatherState.collectAsState(initial = Result.Loading).value
+    val weatherState = viewModel.weatherInfoState.collectAsState().value
 
     Box(modifier = Modifier.fillMaxSize()) {
 
         when (weatherState) {
-            Result.Loading -> {
+            is Result.Loading -> {
                 CircularProgressIndicator(
                     color = Color.Black,
                     modifier = Modifier.align(Alignment.Center)

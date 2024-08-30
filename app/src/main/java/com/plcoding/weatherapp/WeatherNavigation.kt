@@ -38,7 +38,7 @@ fun WeatherNavigation(navController: NavHostController) {
             }
 
             val viewModel = hiltViewModel<WeatherViewModel>(parentEntry)
-            val weatherData by viewModel.weatherData.collectAsState()
+            val weatherData by viewModel.weatherDataState.collectAsState()
 
             WeatherDetailScreen(weatherData = weatherData)
         }

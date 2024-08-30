@@ -12,7 +12,7 @@ private data class WeatherDataMapperHolder(
     val weatherData: WeatherData
 )
 
-fun Hourly.mapData(): Map<Int,List<WeatherData>> {
+private fun Hourly.mapData(): Map<Int,List<WeatherData>> {
 
     val list = time.mapIndexed { index, time ->
         val temp = temperature2m[index]

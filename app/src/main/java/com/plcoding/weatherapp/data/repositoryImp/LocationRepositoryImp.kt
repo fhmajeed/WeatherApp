@@ -66,33 +66,29 @@ class LocationRepositoryImp @Inject constructor(
 
     @SuppressLint("MissingPermission")
     override suspend fun requestLocationUpdate(): Location? {
+        return suspendCancellableCoroutine { cancellableContinuation ->
 
-        val cancellableContinuation =
-            suspendCancellableCoroutine { cancellableContinuation ->
+            val locationRequest = LocationRequest.create().apply {
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                // ... other settings
+            }
 
-                val locationRequest = LocationRequest.create().apply {
-                    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                    // ... other settings
-                }
-
-                val locationCallback = object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult) {
-                        cancellableContinuation.resume(locationResult.lastLocation)
-                    }
-                }
-
-                fusedLocationProviderClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper()
-                )
-
-                cancellableContinuation.invokeOnCancellation {
-                    fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    cancellableContinuation.resume(locationResult.lastLocation)
                 }
             }
 
-        return cancellableContinuation
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+
+            cancellableContinuation.invokeOnCancellation {
+                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            }
+        }
     }
 
 }

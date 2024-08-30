@@ -22,17 +22,17 @@ class WeatherViewModel @Inject constructor(
     private val weatherDatabaseRepository: WeatherDatabaseRepository
 ) : ViewModel() {
 
-    private val _weatherState = MutableStateFlow<Result<WeatherInfo>>(Result.Loading)
-    val weatherState = _weatherState.asStateFlow()
+    private val _weatherInfoState = MutableStateFlow<Result<WeatherInfo>>(Result.Loading)
+    val weatherInfoState = _weatherInfoState.asStateFlow()
 
-    private val _weatherData = MutableStateFlow<WeatherData?>(null)
-    val weatherData = _weatherData.asStateFlow()
+    private val _weatherDataState = MutableStateFlow<WeatherData?>(null)
+    val weatherDataState = _weatherDataState.asStateFlow()
 
     fun getWeatherData() = viewModelScope.launch {
         val currentLocation = locationRepository.getCurrentLocation()?: locationRepository.requestLocationUpdate()
 
         if (currentLocation == null) {
-            _weatherState.value = Result.Error(Exception("Location Error"))
+            _weatherInfoState.value = Result.Error(Exception("Location Error"))
             return@launch
         }
 
@@ -53,14 +53,13 @@ class WeatherViewModel @Inject constructor(
                     )
                 )
             }
-            _weatherState.value = Result.Success(data = data)
+            _weatherInfoState.value = Result.Success(data = data)
         } catch (e: Exception) {
-            weatherDatabaseRepository.getAllWeatherRecord()[0]
-            _weatherState.value = Result.Error(e)
+            _weatherInfoState.value = Result.Error(e)
         }
     }
 
     fun updateWeatherData(weatherData: WeatherData) {
-        _weatherData.value = weatherData
+        _weatherDataState.value = weatherData
     }
 }
